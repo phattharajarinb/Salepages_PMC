@@ -1,6 +1,7 @@
 /* =============================================================
    Pharmacy Real Shop - Backoffice Stylesheet
    CSS สำหรับหน้า Dashboard / Products / Categories / Orders / Shipping / Customers
+   จัดเรียงให้อ่านง่ายและแก้ไขต่อได้ง่าย
    ============================================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&display=swap");
@@ -712,4 +713,187 @@ td img {
   .panel, .metric, .order-summary-card { border-radius: 14px; }
   table { min-width: 860px; }
   .topbar h1 { font-size: 22px; }
+}
+
+/* =============================================================
+   BACKOFFICE MOBILE APP-LIKE FIT UPGRADE
+   ทำให้หลังบ้านพอดีจอมือถือเหมือนแอป ใช้งานง่าย ไม่ล้น
+   ============================================================= */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 700px) {
+  body {
+    min-height: 100svh;
+    background: #f7f8fb;
+    overscroll-behavior-x: none;
+  }
+
+  .admin-shell {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .side {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    padding: 10px 10px 8px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+  }
+
+  .brand {
+    margin-bottom: 8px;
+  }
+
+  .brand img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .brand strong {
+    font-size: 15px;
+    line-height: 1.1;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .menu {
+    gap: 7px;
+    margin: 0 -10px;
+    padding: 0 10px 4px;
+  }
+
+  .menu a {
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: #f3f4f6;
+    white-space: nowrap;
+  }
+
+  .menu a.active,
+  .menu a:hover {
+    background: #eef5d2;
+  }
+
+  .main {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 10px calc(22px + env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    margin-bottom: 10px;
+  }
+
+  .topbar h1 {
+    font-size: 21px;
+    letter-spacing: -0.2px;
+  }
+
+  .cards,
+  .order-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px;
+  }
+
+  .metric,
+  .order-summary-card {
+    min-width: 0;
+    padding: 13px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.07);
+  }
+
+  .metric span,
+  .order-summary-card span {
+    font-size: 11px;
+  }
+
+  .metric b,
+  .order-summary-card strong {
+    font-size: 22px;
+  }
+
+  .panel {
+    width: 100%;
+    max-width: 100%;
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: 0 8px 22px rgba(16, 24, 40, 0.07);
+  }
+
+  .panel h2 {
+    font-size: 17px;
+  }
+
+  .form {
+    gap: 9px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px;
+  }
+
+  .form input,
+  .form select,
+  .form textarea,
+  .btn,
+  .status-select,
+  .tracking-input,
+  .note-input {
+    min-height: 46px;
+    border-radius: 14px;
+  }
+
+  .table-wrap {
+    width: calc(100% + 28px);
+    margin-left: -14px;
+    margin-right: -14px;
+    border-radius: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 760px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .small {
+    min-height: 36px;
+    border-radius: 12px;
+  }
+
+  .order-actions-box {
+    min-width: 220px;
+  }
+}
+
+@media (max-width: 390px) {
+  .main { padding-left: 8px; padding-right: 8px; }
+  .cards, .order-summary-grid { gap: 8px; }
+  .metric, .order-summary-card, .panel { border-radius: 16px; }
+  .metric b, .order-summary-card strong { font-size: 20px; }
 }
