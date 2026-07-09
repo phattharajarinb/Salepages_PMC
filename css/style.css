@@ -1,6 +1,5 @@
 /* =============================================================
    Pharmacy Real Shop - Main Stylesheet
-   ไฟล์นี้จัดเรียงใหม่ให้อ่านง่าย โดยไม่เปลี่ยนชื่อ class หรือโครงสร้างหลัก
    ลำดับโดยรวม: Variables → Reset → Header → Navigation → Hero → Store → Products → Checkout → Footer → Responsive
    ============================================================= */
 
@@ -1619,4 +1618,128 @@ button {
     width: 190px;
     height: 190px;
   }
+}
+
+
+/* =============================================================
+   MOBILE RESPONSIVE UPGRADE
+   ปรับหน้า Frontend ให้สวยบนมือถือ โดยไม่กระทบ Desktop
+   ============================================================= */
+@media (max-width: 1024px) {
+  .wrap { max-width: 100%; padding: 0 18px; }
+  .top { height: auto; padding: 12px 0; }
+  .top-wrap { flex-wrap: wrap; gap: 12px; align-items: center; }
+  .brand { min-width: 0; flex: 1 1 100%; gap: 10px; }
+  .brand img { width: 46px; height: 46px; }
+  .brand strong { font-size: 20px; }
+  .brand small { font-size: 11px; }
+  .system { flex: 1 1 100%; border-left: 0; padding-left: 0; font-size: 15px; white-space: normal; line-height: 1.45; }
+  .top-actions { width: 100%; justify-content: space-between; gap: 8px; }
+  .profile-btn { max-width: calc(100% - 94px); height: 44px; padding: 5px 8px 5px 12px; }
+  .profile-btn span { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .profile-btn small { display: none; }
+  .profile-btn img { width: 34px; height: 34px; }
+  .logout { height: 42px; padding: 0 12px; }
+  .logout span { display: none; }
+
+  .nav { height: auto; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .nav-wrap { height: auto; min-width: max-content; gap: 18px; padding-top: 13px; padding-bottom: 13px; }
+  .nav a { font-size: 13px; }
+  .nav a.active:after { bottom: -13px; }
+
+  .hero { height: 220px; background-position: center; }
+  .hero:before { background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.42)); }
+  .hero h1 { font-size: clamp(28px, 8vw, 38px); line-height: 1.15; }
+  .hero p { font-size: 15px; line-height: 1.55; max-width: 92%; }
+  .main-space { padding-top: 18px; }
+
+  .store-tabs { justify-content: flex-start; overflow-x: auto; gap: 10px; border-radius: 15px; padding: 10px 12px; }
+  .store-tabs .tab { font-size: 13px; white-space: nowrap; }
+  .divider { display: none; }
+
+  .search-card { padding: 16px; border-radius: 16px; margin-bottom: 20px; }
+  .search-head { display: block; margin-bottom: 12px; }
+  .search-head h2 { font-size: 18px; }
+  .search-head p { margin-top: 4px; line-height: 1.5; }
+  .search-row { grid-template-columns: 1fr; gap: 10px; }
+
+  .section-head { margin: 22px 0 12px; gap: 10px; }
+  .section-head h2 { font-size: 20px; }
+  .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .cat { height: 88px; border-radius: 14px; gap: 10px; padding: 10px; justify-content: flex-start; }
+  .cat i { width: 38px; height: 38px; font-size: 19px; flex: 0 0 auto; }
+  .cat strong { font-size: 13px; }
+  .cat span { font-size: 11px; }
+
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .card { border-radius: 16px; }
+  .pic { height: 160px; margin: 10px 10px 0; border-radius: 13px; }
+  .content { padding: 12px; }
+  .content h3 { font-size: 15px; min-height: 40px; line-height: 1.35; }
+  .desc { font-size: 12px; min-height: 40px; line-height: 1.55; }
+  .chip { font-size: 10px; padding: 3px 7px; }
+  .price { font-size: 18px; }
+  .cart { width: 40px; height: 40px; }
+
+  .benefits { grid-template-columns: repeat(2, 1fr); margin: 28px 0 18px; }
+  .benefit { padding: 14px; border-bottom: 1px solid var(--line); }
+  .benefit i { width: 40px; height: 40px; }
+
+  .order-grid, .checkout-grid, .form, .form-grid, .address-form, .qr-layout { grid-template-columns: 1fr !important; }
+  .checkout { padding: 16px; border-radius: 16px; }
+  .checkout-card, .checkout-summary { padding: 16px; border-radius: 16px; }
+  .delivery-options { grid-template-columns: 1fr; }
+  .delivery-option { padding: 14px; }
+  .checkout-summary { position: static; }
+
+  .modal-box { width: calc(100% - 18px); max-height: 94vh; margin: 3vh auto; padding: 16px; border-radius: 20px; }
+  .detail { grid-template-columns: 1fr; gap: 16px; }
+  .detail-img img { height: 260px; }
+  .modal-actions { flex-direction: column; }
+  .modal-actions .btn, .modal-actions .outline { width: 100%; }
+
+  .drawer { width: 100%; right: -100%; }
+  .float-cart { width: 56px; height: 56px; right: 16px; bottom: 16px; font-size: 21px; }
+  .qr-box { width: calc(100% - 18px); margin: 3vh auto; padding: 18px; border-radius: 20px; }
+  .qr-head h2 { font-size: 22px; }
+  .qr-code { width: 176px; height: 176px; }
+  .qr-row { align-items: flex-start; }
+
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 720px; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 14px; }
+  .wrap { padding: 0 12px; }
+  .brand img { width: 40px; height: 40px; }
+  .brand strong { font-size: 17px; }
+  .brand small { font-size: 10px; }
+  .system { font-size: 13px; }
+  .lang { font-size: 12px; }
+  .profile-btn { max-width: calc(100% - 78px); font-size: 12px; }
+  .profile-btn span { max-width: 145px; }
+  .logout { width: 42px; padding: 0; display: grid; place-items: center; }
+
+  .hero { height: 185px; }
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 13px; }
+  .store-tabs { margin-left: -2px; margin-right: -2px; }
+  .search-card { display: none; }
+  .cats { grid-template-columns: 1fr 1fr; }
+  .cat { height: 78px; }
+  .grid { grid-template-columns: 1fr; gap: 12px; }
+  .pic { height: 210px; }
+  .content h3 { min-height: auto; font-size: 16px; }
+  .desc { min-height: auto; }
+  .bottom { padding-top: 12px; }
+  .price { font-size: 21px; }
+  .benefits { grid-template-columns: 1fr; }
+  .benefit { border-right: 0; }
+
+  .panel, .order, .checkout { margin-top: 16px; padding: 14px; }
+  .section-head { align-items: flex-start; flex-direction: column; }
+  .form input, .form select, .form textarea, .btn, .outline { min-height: 46px; width: 100%; }
+  .detail-img img { height: 220px; }
+  .close, .modal-box > .close, .qr-close { right: 12px; top: 12px; width: 36px; height: 36px; }
 }
