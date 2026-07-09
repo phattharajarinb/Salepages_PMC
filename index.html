@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>สินค้าสภาเภสัชกรรม</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- =============================================================
+  หน้าร้านหลัก (Frontend)
+  - Header / Hero Banner / Search / Product Grid
+  - Wishlist / Cart Drawer / Checkout / My Orders
+  ============================================================= -->
+    <!-- Header หลักของระบบ -->
+    <header class="top">
+      <div class="wrap top-wrap">
+        <a class="brand" href="#home" aria-label="หน้าแรก">
+          <img src="assets/Logo.png" alt="สภาเภสัชกรรม" />
+          <span><strong>สภาเภสัชกรรม</strong><small>The Pharmacy Council of Thailand</small></span>
+        </a>
+        <div class="system">ระบบบริการผู้ประกอบวิชาชีพเภสัชกรรม</div>
+        <div class="top-actions">
+          <span class="lang"><i class="fa-solid fa-globe"></i> TH</span>
+          <button class="profile-btn" id="profileBtn" type="button">
+            <span>สวัสดี ภก. สมชาย รักษาดี<small>ภ.12345</small></span>
+            <img src="https://i.pravatar.cc/80?img=12" alt="profile" />
+          </button>
+          <button class="logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i><span>ออกจากระบบ</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- เมนูระบบเดิม -->
+    <nav class="nav">
+      <div class="wrap nav-wrap">
+        <a href="#home">หน้าแรก</a>
+        <a href="#profile">ข้อมูลของฉัน</a>
+        <a href="#service">งานบริการ</a>
+        <a href="#meeting">งานประชุม</a>
+        <a href="#edu">การศึกษา</a>
+        <a href="#products" class="active">สินค้าสภาเภสัชกรรม</a>
+        <a href="backoffice/dashboard.html" class="bo-link">Backoffice</a>
+      </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero" id="home">
+      <div class="wrap hero-content">
+        <h1>สินค้าสภาเภสัชกรรม</h1>
+        <p>อุปกรณ์ ตำรา และสินค้าคุณภาพสำหรับเภสัชกรมืออาชีพ จัดส่งทั่วประเทศ</p>
+      </div>
+    </section>
+
+    <main class="wrap main-space">
+      <!-- แถบเมนูเล็กด้านบนช่องค้นหา ตามที่ขอ -->
+      <section class="store-tabs" aria-label="เมนูร้านค้า">
+        <button type="button" class="tab active" data-store-tab="all">สินค้าทั้งหมด</button>
+        <span class="divider">|</span>
+        <button type="button" class="tab" data-store-tab="orders">ออเดอร์ของฉัน</button>
+        <span class="divider">|</span>
+        <button type="button" class="tab" data-store-tab="wishlist">
+          <i class="fa-regular fa-heart"></i> Wishlist <b id="wishlistCount">0</b>
+        </button>
+        <span class="divider">|</span>
+        <button type="button" class="tab" data-store-tab="cart">
+          <i class="fa-solid fa-cart-shopping"></i> ตะกร้า <b id="cartTabCount">0</b>
+        </button>
+      </section>
+
+      <!-- ค้นหาสินค้า -->
+      <section class="search-card">
+        <div class="search-head">
+          <h2>ค้นหาสินค้า</h2>
+          <p>ค้นหาสินค้าที่คุณสนใจ เช่น ตำรา, อุปกรณ์, หรือเครื่องแบบ</p>
+        </div>
+        <div class="search-row">
+          <label class="search-input"
+            ><i class="fa-solid fa-magnifying-glass"></i
+            ><input id="searchInput" placeholder="ชื่อสินค้า..."
+          /></label>
+          <button class="btn" id="searchBtn">ค้นหา</button>
+        </div>
+      </section>
+
+      <!-- หมวดหมู่ -->
+      <section id="categorySection">
+        <div class="section-head"><h2>หมวดหมู่สินค้า</h2></div>
+        <div class="cats" id="catList"></div>
+      </section>
+
+      <!-- สินค้า -->
+      <section id="products">
+        <div class="section-head">
+          <h2>รายการสินค้าแนะนำ</h2>
+          <button class="link" id="showAll">
+            ดูทั้งหมด <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="grid" id="productGrid"></div>
+      </section>
+
+      <!-- Wishlist -->
+      <section class="panel hidden" id="wishlistPanel">
+        <div class="section-head">
+          <h2>Wishlist ของฉัน</h2>
+          <button class="link" data-store-tab="all">กลับไปเลือกสินค้า</button>
+        </div>
+        <div class="grid" id="wishlistGrid"></div>
+      </section>
+
+      <!-- ออเดอร์ของฉัน: ผู้ใช้ login แล้ว จึงแสดงรายการออเดอร์ทั้งหมดของผู้ใช้ -->
+      <section class="panel hidden" id="myOrdersPanel">
+        <div class="section-head">
+          <h2>ออเดอร์ของฉัน</h2>
+          <button class="link" data-store-tab="all">ซื้อสินค้าเพิ่ม</button>
+        </div>
+        <div class="orders" id="myOrders"></div>
+      </section>
+
+      <!-- Checkout -->
+      <section class="checkout hidden" id="checkout">
+        <div class="checkout-head">
+          <div>
+            <span class="eyebrow">Checkout</span>
+            <h2>ชำระเงินและวิธีรับสินค้า</h2>
+            <p>
+              เลือกวิธีรับสินค้าก่อนยืนยันคำสั่งซื้อ ระบบจะบันทึกรายละเอียดนี้ให้ Backoffice ทันที
+            </p>
+          </div>
+        </div>
+
+        <form class="checkout-form" id="checkoutForm">
+          <div class="checkout-grid">
+            <div class="checkout-main">
+              <section class="checkout-card">
+                <h3>ข้อมูลผู้สั่งซื้อ</h3>
+                <div class="form-grid">
+                  <label>
+                    <span>ชื่อ-นามสกุล</span>
+                    <input
+                      required
+                      id="customerName"
+                      value="ภก. สมชาย รักษาดี"
+                      placeholder="ชื่อ-นามสกุล"
+                    />
+                  </label>
+                  <label>
+                    <span>เบอร์โทรศัพท์</span>
+                    <input
+                      required
+                      id="customerPhone"
+                      value="081-234-5678"
+                      placeholder="เบอร์โทรศัพท์"
+                    />
+                  </label>
+                  <label class="full">
+                    <span>อีเมล</span>
+                    <input
+                      required
+                      id="customerEmail"
+                      value="somchai@example.com"
+                      placeholder="อีเมล"
+                    />
+                  </label>
+                </div>
+              </section>
+
+              <section class="checkout-card">
+                <h3>วิธีรับสินค้า</h3>
+                <p class="hint">เลือกได้ 1 วิธี ระบบจะแสดงช่องที่ต้องกรอกตามตัวเลือก</p>
+
+                <div class="delivery-options" id="deliveryOptions">
+                  <label class="delivery-option active" data-delivery-card="pickup">
+                    <input type="radio" name="deliveryType" value="pickup" checked />
+                    <div>
+                      <strong>รับด้วยตนเอง</strong>
+                      <span>รับที่สำนักงานเลขาธิการสภาเภสัชกรรม</span>
+                      <b>ฟรี</b>
+                    </div>
+                  </label>
+
+                  <label class="delivery-option" data-delivery-card="registered">
+                    <input type="radio" name="deliveryType" value="registered" />
+                    <div>
+                      <strong>จัดส่งที่อยู่ที่ลงทะเบียนไว้</strong>
+                      <span>ใช้ที่อยู่จากข้อมูลสมาชิกที่เข้าสู่ระบบ</span>
+                      <b>฿60</b>
+                    </div>
+                  </label>
+
+                  <label class="delivery-option" data-delivery-card="custom">
+                    <input type="radio" name="deliveryType" value="custom" />
+                    <div>
+                      <strong>เลือกที่อยู่เอง</strong>
+                      <span>กรอกที่อยู่ใหม่ จังหวัด อำเภอ ตำบล และรหัสไปรษณีย์</span>
+                      <b>฿60</b>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="delivery-detail" id="pickupDetail">
+                  <h4>สถานที่รับสินค้า</h4>
+                  <p>
+                    สำนักงานเลขาธิการสภาเภสัชกรรม อาคารมหิตลาธิเบศร ชั้น 8 กระทรวงสาธารณสุข<br />
+                    เลขที่ 88/19 หมู่ 4 ถนนติวานนท์ ตำบลตลาดขวัญ อำเภอเมือง จังหวัดนนทบุรี 11000
+                  </p>
+                  <p class="hint">เวลาทำการ: จันทร์ - ศุกร์ เวลา 08.30 - 16.30 น.</p>
+                </div>
+
+                <div class="delivery-detail hidden" id="registeredDetail">
+                  <h4>ที่อยู่ที่ลงทะเบียนไว้</h4>
+                  <p>
+                    ภก. สมชาย รักษาดี<br />
+                    081-234-5678<br />
+                    99/15 หมู่ 3 ถนนงามวงศ์วาน แขวงลาดยาว เขตจตุจักร กรุงเทพมหานคร 10900
+                  </p>
+                  <p class="hint">
+                    ตัวอย่างข้อมูลสมาชิกที่ Login อยู่
+                    สามารถเปลี่ยนเป็นข้อมูลจากฐานข้อมูลจริงได้ภายหลัง
+                  </p>
+                </div>
+
+                <div class="delivery-detail hidden" id="customDetail">
+                  <h4>เพิ่มที่อยู่ใหม่</h4>
+                  <div class="address-form">
+                    <label
+                      ><span>ชื่อผู้รับ</span><input id="shipName" placeholder="ชื่อผู้รับ"
+                    /></label>
+                    <label
+                      ><span>เบอร์โทร</span><input id="shipPhone" placeholder="เบอร์โทร"
+                    /></label>
+                    <label
+                      ><span>บ้านเลขที่ / อาคาร / ห้อง</span
+                      ><input id="shipHouse" placeholder="เช่น 88/19 อาคาร A ชั้น 8"
+                    /></label>
+                    <label><span>หมู่</span><input id="shipMoo" placeholder="เช่น 4" /></label>
+                    <label
+                      ><span>ถนน</span><input id="shipRoad" placeholder="เช่น ติวานนท์"
+                    /></label>
+                    <label
+                      ><span>จังหวัด</span
+                      ><select id="shipProvince"></select
+                    ></label>
+                    <label
+                      ><span>อำเภอ / เขต</span
+                      ><select id="shipDistrict"></select
+                    ></label>
+                    <label
+                      ><span>ตำบล / แขวง</span
+                      ><select id="shipSubdistrict"></select
+                    ></label>
+                    <label
+                      ><span>รหัสไปรษณีย์</span
+                      ><input id="shipZip" readonly placeholder="รหัสไปรษณีย์"
+                    /></label>
+                  </div>
+                </div>
+              </section>
+
+              <section class="checkout-card">
+                <h3>วิธีชำระเงิน</h3>
+                <select id="payment">
+                  <option>โอนเงิน / QR Payment</option>
+                  <option>บัตรเครดิต / เดบิต</option>
+                  <option>เก็บเงินปลายทาง</option>
+                </select>
+              </section>
+            </div>
+
+            <aside class="checkout-summary">
+              <h3>สรุปคำสั่งซื้อ</h3>
+              <div id="checkoutSummaryItems" class="summary-items"></div>
+              <div class="summary-line"><span>ค่าสินค้า</span><b id="checkoutSubtotal">฿0</b></div>
+              <div class="summary-line"><span>ค่าจัดส่ง</span><b id="checkoutShipping">ฟรี</b></div>
+              <div class="summary-total">
+                <span>รวมทั้งหมด</span><b id="checkoutGrandTotal">฿0</b>
+              </div>
+              <button class="btn wide" type="submit">ยืนยันสั่งซื้อ</button>
+            </aside>
+          </div>
+        </form>
+      </section>
+
+      <!-- แถบจุดเด่นร้าน -->
+      <section class="benefits">
+        <div class="benefit">
+          <i class="fa-solid fa-truck-fast"></i>
+          <div><strong>จัดส่งรวดเร็ว</strong><span>ทั่วประเทศ</span></div>
+        </div>
+        <div class="benefit">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div><strong>สินค้าคุณภาพ</strong><span>มาตรฐานสภาเภสัชกรรม</span></div>
+        </div>
+        <div class="benefit">
+          <i class="fa-solid fa-credit-card"></i>
+          <div><strong>ชำระเงินปลอดภัย</strong><span>หลายช่องทาง</span></div>
+        </div>
+        <div class="benefit">
+          <i class="fa-solid fa-headset"></i>
+          <div><strong>บริการลูกค้า</strong><span>พร้อมให้คำปรึกษา</span></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="corp-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <h2>ติดต่อสภาเภสัชกรรม</h2>
+          <p>
+            สำนักงานเลขาธิการสภาเภสัชกรรม อาคารมหิตลาธิเบศร ชั้น 8 กระทรวงสาธารณสุข<br />เลขที่
+            88/19 หมู่ 4 ถนนติวานนท์ ตำบลตลาดขวัญ อำเภอเมือง จังหวัดนนทบุรี 11000
+          </p>
+          <div class="contact-row"><b>โทรศัพท์ :</b> 0 2591 9992 (คู่สายอัตโนมัติ)</div>
+          <div class="contact-row"><b>โทรสาร :</b> 0 2591 9996</div>
+          <div class="contact-row"><b>Email :</b> pharthai@pharmacycouncil.org</div>
+          <h3>ช่องทางการติดต่อสภาเภสัชกรรม</h3>
+          <div class="socials">
+            <a><i class="fa-solid fa-globe"></i></a><a><i class="fa-brands fa-facebook-f"></i></a
+            ><a>LINE</a><a><i class="fa-solid fa-envelope"></i></a
+            ><a><i class="fa-brands fa-youtube"></i></a><a><i class="fa-solid fa-phone"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3>หมายเลขภายในหน่วยงานต่าง ๆ</h3>
+          <div class="deps">
+            <div>
+              <p><b>กด 1</b> ฝ่ายทะเบียนฯ</p>
+              <p><b>กด 2</b> ฝ่ายการศึกษาฯ</p>
+              <p><b>กด 3</b> ฝ่ายกฎหมาย</p>
+              <p><b>กด 4</b> ศูนย์การศึกษาต่อเนื่องฯ</p>
+            </div>
+            <div>
+              <p><b>กด 5</b> ศูนย์สื่อความรู้</p>
+              <p><b>กด 6</b> สำนักงานรับรองร้านยา</p>
+              <p><b>กด 7</b> ราชวิทยาลัยเภสัชกรรมฯ</p>
+              <p><b>กด 0</b> ประชาสัมพันธ์</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          ท่านสามารถศึกษารายละเอียดการดำเนินการตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล
+          <a>ได้ที่นี่</a>
+        </p>
+        <p>© 2012–2026</p>
+      </div>
+    </footer>
+
+    <!-- ปุ่มตะกร้าลอย -->
+    <button class="float-cart" id="openCart">
+      <i class="fa-solid fa-cart-shopping"></i><span class="count" id="cartCount">0</span>
+    </button>
+
+    <!-- Modal รายละเอียดสินค้า -->
+    <section class="modal" id="productModal">
+      <div class="shade" data-close></div>
+      <div class="modal-box">
+        <button class="close" data-close>×</button>
+        <div class="detail">
+          <div class="detail-img"><img id="modalImg" alt="สินค้า" /></div>
+          <div>
+            <span class="badge" id="modalBadge">NEW</span>
+            <h2 id="modalName"></h2>
+            <p class="detail-desc" id="modalDesc"></p>
+            <h2 id="modalPrice"></h2>
+            <b>สี</b>
+            <div class="option-row" id="colorOptions"></div>
+            <b>ไซส์ / ตัวเลือก</b>
+            <div class="option-row" id="sizeOptions"></div>
+            <b>จำนวน</b><br />
+            <div class="qty">
+              <button id="minus">−</button><b id="qty">1</b><button id="plus">+</button>
+            </div>
+            <div class="modal-actions">
+              <button class="btn" id="addCartModal">
+                <i class="fa-solid fa-cart-shopping"></i> เพิ่มลงตะกร้า</button
+              ><button class="outline" id="wishModal">
+                <i class="fa-regular fa-heart"></i> Wishlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- =============================================================
+      QR Payment Mockup Modal
+      -------------------------------------------------------------
+      Modal นี้เป็นมอกอัปสำหรับทดลอง flow การชำระเงินผ่าน QR
+      เมื่อกด "ยืนยันว่าชำระเงินแล้ว" ระบบจะสร้างออเดอร์และบันทึกลง localStorage
+      ทำให้ Backoffice > คำสั่งซื้อ เห็นออเดอร์ทันทีใน Browser เดียวกัน
+    ============================================================= -->
+    <section class="qr-modal" id="qrPaymentModal" aria-hidden="true">
+      <div class="qr-shade" data-close-qr></div>
+
+      <div class="qr-box" role="dialog" aria-modal="true" aria-labelledby="qrPaymentTitle">
+        <button class="qr-close" type="button" data-close-qr aria-label="ปิด">×</button>
+
+        <div class="qr-head">
+          <span class="qr-kicker">QR Payment Mockup</span>
+          <h2 id="qrPaymentTitle">ชำระเงินผ่าน QR Payment</h2>
+          <p>สแกน QR ตัวอย่างเพื่อจำลองการชำระเงิน จากนั้นกดปุ่มยืนยันด้านล่าง</p>
+        </div>
+
+        <div class="qr-layout">
+          <div class="qr-preview" aria-label="QR Code mockup">
+            <!-- QR จำลองด้วย CSS ไม่ใช่ QR จริง ใช้สำหรับมอกอัปเท่านั้น -->
+            <div class="qr-code" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <small>PCOT QR MOCKUP</small>
+          </div>
+
+          <div class="qr-detail">
+            <div class="qr-row">
+              <span>เลขออเดอร์</span>
+              <b id="qrOrderId">-</b>
+            </div>
+            <div class="qr-row">
+              <span>ยอดที่ต้องชำระ</span>
+              <b id="qrTotal">฿0</b>
+            </div>
+            <div class="qr-row">
+              <span>ผู้ชำระเงิน</span>
+              <b id="qrCustomer">-</b>
+            </div>
+            <div class="qr-row">
+              <span>วิธีรับสินค้า</span>
+              <b id="qrDelivery">-</b>
+            </div>
+
+            <div class="qr-note">
+              ระบบนี้เป็นตัวอย่าง Frontend เท่านั้น เมื่อกดยืนยัน ระบบจะบันทึกออเดอร์เป็น
+              <b>ชำระเงินเรียบร้อย</b> และส่งข้อมูลไปหน้า Backoffice ผ่าน localStorage
+            </div>
+
+            <button class="btn wide" type="button" id="confirmQrPayment">
+              ยืนยันว่าชำระเงินแล้ว
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Drawer ตะกร้าสินค้า -->
+    <aside class="drawer" id="cartDrawer">
+      <div class="drawer-head">
+        <h2>ตะกร้าสินค้า</h2>
+        <button class="close" id="closeCart">×</button>
+      </div>
+      <div class="drawer-body" id="cartItems"></div>
+      <div class="drawer-foot">
+        <h2>รวม: <span id="cartTotal">฿0</span></h2>
+        <button class="btn wide" id="goCheckout">ไปชำระเงิน</button>
+      </div>
+    </aside>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

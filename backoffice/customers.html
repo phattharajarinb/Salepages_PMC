@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ลูกค้า</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Backoffice: รายชื่อลูกค้าจากประวัติออเดอร์ -->
+    <div class="admin-shell" id="root"></div>
+    <script src="admin.js"></script>
+    <script>
+      const appEl = initAdminPage("ลูกค้า");
+      const orders = getStore(ORDER_KEY);
+      const map = {};
+      orders.forEach((o) => {
+        const key = o.customer.email || o.customer.phone;
+        if (!map[key]) map[key] = { ...o.customer, count: 0, total: 0, last: o.createdAt };
+        map[key].count++;
+        map[key].total += Number(o.total || 0);
+        map[key].last = o.createdAt;
+      });
+      const customers = Object.values(map);
+      appEl.innerHTML = `<section class="panel"><h2>รายชื่อลูกค้า</h2><div class="table-wrap"><table><thead><tr><th>ชื่อ</th><th>โทรศัพท์</th><th>Email</th><th>จำนวนออเดอร์</th><th>ยอดซื้อรวม</th><th>สั่งล่าสุด</th></tr></thead><tbody>${customers.map((c) => `<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.email}</td><td>${c.count}</td><td>${baht(c.total)}</td><td>${fmtDate(c.last)}</td></tr>`).join("") || '<tr><td colspan="6">ยังไม่มีลูกค้า</td></tr>'}</tbody></table></div></section>`;
+    </script>
+  </body>
+</html>

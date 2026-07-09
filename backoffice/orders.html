@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>คำสั่งซื้อ</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Backoffice: จัดการคำสั่งซื้อ สถานะ Tracking หมายเหตุ และลบออเดอร์ -->
+    <div class="admin-shell" id="root"></div>
+
+    <script src="admin.js"></script>
+    <script>
+      // =============================================================
+      // หน้า Backoffice: คำสั่งซื้อ
+      // หน้านี้ออกแบบใหม่ให้เหมือนระบบ E-Commerce จริง
+      // - ตารางกว้างอ่านง่าย
+      // - ช่อง Tracking และหมายเหตุมีขนาดพอดี
+      // - มีปุ่มลบออเดอร์
+      // - เปลี่ยนสถานะแล้วบันทึกลง localStorage ทันที
+      // =============================================================
+
+      const appEl = initAdminPage("คำสั่งซื้อ");
+
+      // สถานะหลักของออเดอร์ 
+      const statuses = [
+      "รอชำระเงิน",
+      "กำลังเตรียมสินค้า",
+      "พร้อมรับสินค้า",
+      "กำลังจัดส่ง",
+      "จัดส่งสำเร็จ",
+      "ยกเลิก",
+     ];
+
+      // class สีของแต่ละสถานะ ใช้คู่กับ admin.css
+      const statusClass = {
+      "รอชำระเงิน": "status-pending",
+      "กำลังเตรียมสินค้า": "status-preparing",
+      "พร้อมรับสินค้า": "status-ready-pickup",
+      "กำลังจัดส่ง": "status-shipping",
+      "จัดส่งสำเร็จ": "status-completed",
+      "ยกเลิก": "status-cancelled",
+     };
+
+      function badge(status) {
+        return `<span class="status-badge ${statusClass[status] || "status-preparing"}">${status}</span>`;
+      }
+
+      function deliveryLabel(type) {
+        if (type === "pickup") return "รับด้วยตนเอง";
+        if (type === "registered") return "จัดส่งที่อยู่ที่ลงทะเบียนไว้";
+        if (type === "custom") return "เลือกที่อยู่เอง";
+        return "-";
+      }
+
+      function deliveryClass(type) {
+        if (type === "pickup") return "delivery-pickup";
+        if (type === "registered") return "delivery-registered";
+        if (type === "custom") return "delivery-custom";
+        return "";
+      }
+
+      function itemList(order) {
+        return (order.items || [])
+          .map(
+            (item) => `
+        <div class="order-product-line">
+          <span class="order-product-name">${item.name}</span>
+          <span class="order-product-option">${item.color || "-"} / ${item.size || "-"} / จำนวน ${item.qty}</span>
+        </div>
+      `,
+          )
+          .join("");
+      }
+
+      function renderSummary(orders) {
+        const total = orders.length;
+        const pending = orders.filter((o) => o.status === "รอชำระเงิน").length;
+        const preparing = orders.filter((o) => o.status === "กำลังเตรียมสินค้า").length;
+        const shipping = orders.filter((o) => o.status === "กำลังจัดส่ง").length;
+        const income = orders
+          .filter((o) => o.status !== "ยกเลิก")
+          .reduce((sum, o) => sum + Number(o.total || 0), 0);
+
+        return `
+        <section class="order-summary-grid">
+          <div class="order-summary-card">
+            <span>คำสั่งซื้อทั้งหมด</span>
+            <strong>${total}</strong>
+          </div>
+          <div class="order-summary-card">
+            <span>รอชำระเงิน</span>
+            <strong>${pending}</strong>
+          </div>
+          <div class="order-summary-card">
+            <span>กำลังเตรียมสินค้า</span>
+            <strong>${preparing}</strong>
+          </div>
+          <div class="order-summary-card">
+            <span>กำลังจัดส่ง</span>
+            <strong>${shipping}</strong>
+          </div>
+          <div class="order-summary-card order-summary-card--income">
+            <span>ยอดรวมที่ไม่ถูกยกเลิก</span>
+            <strong>${baht(income)}</strong>
+          </div>
+        </section>
+      `;
+      }
+
+      function render() {
+        const orders = getStore(ORDER_KEY);
+
+        appEl.innerHTML = `
+        ${renderSummary(orders)}
+
+        <section class="panel order-panel">
+          <div class="panel-head order-panel-head">
+            <div>
+              <h2>รายการคำสั่งซื้อ</h2>
+              <p class="hint">จัดการสถานะ เลขพัสดุ หมายเหตุถึงลูกค้า และลบออเดอร์ได้จากหน้านี้</p>
+            </div>
+            <button class="btn light" onclick="render()">
+              <i class="fa-solid fa-rotate-right"></i>
+              รีเฟรช
+            </button>
+          </div>
+
+          <div class="table-wrap order-table-wrap">
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th class="col-order">เลขออเดอร์</th>
+                  <th class="col-date">วันเวลา</th>
+                  <th class="col-customer">ลูกค้า</th>
+                  <th class="col-products">สินค้า</th>
+                  <th class="col-delivery">การรับสินค้า</th>
+                  <th class="col-total">ยอดรวม</th>
+                  <th class="col-status">สถานะ</th>
+                  <th class="col-manage">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${
+                  orders
+                    .map(
+                      (o) => `
+                  <tr>
+                    <td class="order-id-cell">
+                      <b>${o.id}</b>
+                      <span class="order-subtext">Order ID</span>
+                    </td>
+
+                    <td>
+                      <b>${fmtDate(o.createdAt).split(" ")[0] || "-"}</b>
+                      <span class="order-subtext">${fmtDate(o.createdAt).split(" ")[1] || ""}</span>
+                    </td>
+
+                    <td>
+                      <div class="customer-mini">
+                        <div class="customer-avatar">${(o.customer?.name || "U").slice(0, 1).toUpperCase()}</div>
+                        <div>
+                          <b>${o.customer?.name || "-"}</b>
+                          <span>${o.customer?.phone || "-"}</span>
+                          <span>${o.paymentStatus || "รอชำระเงิน"}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td class="order-items-cell">
+                      ${itemList(o)}
+                    </td>
+
+                    <td>
+                      <div class="delivery-card ${deliveryClass(o.delivery?.type)}">
+                        <b>${deliveryLabel(o.delivery?.type)}</b>
+                        <span>${o.delivery?.address || "-"}</span>
+                      </div>
+                    </td>
+
+                    <td class="total-cell">${baht(o.total)}</td>
+
+                    <td>${badge(o.status)}</td>
+
+                    <td>
+                      <div class="order-actions-box">
+                        <!-- ช่องเปลี่ยนสถานะ: ขนาด 100% ภายในช่องจัดการ -->
+                        <label>
+                          <span>สถานะ</span>
+                          <select class="status-select full-control" onchange="updateStatus('${o.id}', this.value)">
+                            ${statuses.map((s) => `<option ${o.status === s ? "selected" : ""}>${s}</option>`).join("")}
+                          </select>
+                        </label>
+
+                        <!-- ช่องเลขพัสดุ: ใช้เมื่อเลือกการจัดส่ง -->
+                        <label>
+                          <span>เลขพัสดุ</span>
+                          <input class="tracking-input full-control" value="${o.tracking || ""}" onchange="updateTracking('${o.id}', this.value)" placeholder="เช่น TH123456789TH">
+                        </label>
+
+                        <!-- หมายเหตุถึงลูกค้า: ใช้แจ้งกรณีสินค้าหมด หรือข้อมูลเพิ่มเติม -->
+                        <label>
+                          <span>หมายเหตุถึงลูกค้า</span>
+                          <textarea class="note-input full-control" onchange="updateNote('${o.id}', this.value)" placeholder="เช่น สินค้าหมดชั่วคราว เจ้าหน้าที่จะติดต่อกลับ">${o.customer?.note || ""}</textarea>
+                        </label>
+
+                        <div class="order-action-row">
+                          <button class="small edit" onclick="saveOrder('${o.id}')">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            บันทึก
+                          </button>
+                          <button class="small del" onclick="deleteOrder('${o.id}')">
+                            <i class="fa-solid fa-trash-can"></i>
+                            ลบออเดอร์
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>`,
+                    )
+                    .join("") ||
+                  '<tr><td colspan="8" class="empty-row">ยังไม่มีคำสั่งซื้อ</td></tr>'
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>`;
+      }
+
+      // เปลี่ยนสถานะออเดอร์
+      window.updateStatus = (id, status) => {
+        setStore(
+          ORDER_KEY,
+          getStore(ORDER_KEY).map((o) => (o.id === id ? { ...o, status } : o)),
+        );
+        render();
+      };
+
+      // เพิ่มเลขพัสดุ ถ้ามีเลขพัสดุจะเปลี่ยนสถานะเป็น กำลังจัดส่ง อัตโนมัติ
+      window.updateTracking = (id, tracking) => {
+        setStore(
+          ORDER_KEY,
+          getStore(ORDER_KEY).map((o) => {
+            if (o.id !== id) return o;
+            return { ...o, tracking, status: tracking ? "กำลังจัดส่ง" : o.status };
+          }),
+        );
+        render();
+      };
+
+      // บันทึกหมายเหตุถึงลูกค้า เช่น กรณีสินค้าหมด
+      window.updateNote = (id, note) => {
+        setStore(
+          ORDER_KEY,
+          getStore(ORDER_KEY).map((o) => {
+            if (o.id !== id) return o;
+            return { ...o, customer: { ...o.customer, note } };
+          }),
+        );
+      };
+
+      // ปุ่มบันทึก ใช้แสดงผลให้แอดมินรู้ว่าบันทึกแล้ว
+      window.saveOrder = (id) => {
+        alert("บันทึกข้อมูลออเดอร์เรียบร้อยแล้ว");
+        render();
+      };
+
+      // ลบออเดอร์ออกจากระบบ Backoffice และหน้าออเดอร์ของลูกค้า
+      window.deleteOrder = (id) => {
+        const ok = confirm("ต้องการลบออเดอร์นี้ใช่หรือไม่");
+        if (!ok) return;
+        const orders = getStore(ORDER_KEY).filter((o) => o.id !== id);
+        setStore(ORDER_KEY, orders);
+        render();
+      };
+
+      render();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Size / Color</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- Backoffice: จัดการตัวเลือกสินค้า เช่น Size และ Color -->
+    <div class="admin-shell" id="root"></div>
+
+    <script src="admin.js"></script>
+    <script>
+      const appEl = initAdminPage("ตัวเลือกสินค้า Size / Color");
+
+      function renderOptions() {
+        const products = getStore(PRODUCT_KEY);
+
+        appEl.innerHTML = `
+          <section class="panel">
+            <h2>จัดการตัวเลือกสินค้า</h2>
+            <p class="hint">หน้านี้ใช้แก้สีและไซส์ของสินค้าแต่ละรายการโดยตรง</p>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>สินค้า</th>
+                    <th>สี</th>
+                    <th>ไซส์/ตัวเลือก</th>
+                    <th>บันทึก</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${
+                    products
+                      .map(
+                        (product) => `
+                          <tr>
+                            <td><b>${escapeHtml(product.name)}</b></td>
+                            <td>
+                              <input id="color_${escapeHtml(product.id)}" value="${escapeHtml((product.colors || []).join(","))}">
+                            </td>
+                            <td>
+                              <input id="size_${escapeHtml(product.id)}" value="${escapeHtml((product.sizes || []).join(","))}">
+                            </td>
+                            <td>
+                              <button class="small edit" type="button" data-action="save-option" data-id="${escapeHtml(product.id)}">
+                                บันทึก
+                              </button>
+                            </td>
+                          </tr>
+                        `,
+                      )
+                      .join("") || '<tr><td colspan="4">ยังไม่มีสินค้า</td></tr>'
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }
+
+      appEl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-action='save-option']");
+        if (!button) return;
+
+        const id = button.dataset.id;
+        const colorInput = document.getElementById(`color_${id}`);
+        const sizeInput = document.getElementById(`size_${id}`);
+
+        const nextProducts = getStore(PRODUCT_KEY).map((product) => {
+          if (product.id !== id) return product;
+
+          return {
+            ...product,
+            colors: colorInput.value
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean),
+            sizes: sizeInput.value
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean),
+            updatedAt: new Date().toISOString(),
+          };
+        });
+
+        setStore(PRODUCT_KEY, nextProducts);
+        alert("บันทึกตัวเลือกสินค้าแล้ว");
+        renderOptions();
+      });
+
+      renderOptions();
+    </script>
+  </body>
+</html>

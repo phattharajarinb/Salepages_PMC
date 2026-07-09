@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>จัดการสินค้า</title>
+
+    <!-- Backoffice stylesheet -->
+    <link rel="stylesheet" href="admin.css" />
+
+    <!-- Icon library -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!--
+      Backoffice: Products Management
+      -------------------------------------------------------------
+      หน้านี้ใช้สำหรับ เพิ่ม / แก้ไข / ลบสินค้า
+      ข้อมูลเก็บใน localStorage key = pcot_products_v2
+      แก้ไขรอบนี้:
+      - ใช้ id ของ input ที่ไม่ชนกับ window.name
+      - ปุ่มทั้งหมดใช้ data-action
+      - บันทึกสินค้าใหม่และแก้ไขสินค้าเดิมได้จริง
+      - อ่านรูปภาพเป็น Base64 แบบบีบอัดก่อนบันทึก
+      - หลังบันทึกจะ render ตารางใหม่ทันที
+    -->
+    <div class="admin-shell" id="root"></div>
+
+    <script src="admin.js"></script>
+
+    <script>
+      // =============================================================
+      // 1) Initial page setup
+      // =============================================================
+      document.addEventListener("DOMContentLoaded", () => {
+        const appEl = initAdminPage("จัดการสินค้า");
+        if (!appEl) return;
+
+        // editId = null คือโหมดเพิ่มสินค้าใหม่
+        // editId มีค่า คือโหมดแก้ไขสินค้าเดิม
+        let editId = null;
+
+        // =============================================================
+        // 2) Helper: ดึง element ของฟอร์มทุกครั้งหลัง render
+        // =============================================================
+        function getFormElements() {
+          return {
+            form: document.getElementById("productForm"),
+            nameInput: document.getElementById("productNameInput"),
+            categorySelect: document.getElementById("productCategoryInput"),
+            priceInput: document.getElementById("productPriceInput"),
+            stockInput: document.getElementById("productStockInput"),
+            badgeInput: document.getElementById("productBadgeInput"),
+            colorsInput: document.getElementById("productColorsInput"),
+            sizesInput: document.getElementById("productSizesInput"),
+            imageInput: document.getElementById("productImageInput"),
+            descInput: document.getElementById("productDescInput"),
+          };
+        }
+
+        // =============================================================
+        // 3) Helper: แปลงข้อความที่คั่นด้วย comma เป็น array
+        // =============================================================
+        function commaToArray(value) {
+          return String(value || "")
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean);
+        }
+
+        // =============================================================
+        // 4) Render page
+        // =============================================================
+        function renderProductsPage() {
+          const categories = getStore(CAT_KEY);
+          const products = getStore(PRODUCT_KEY);
+          const editingProduct = products.find((product) => product.id === editId);
+
+          appEl.innerHTML = `
+            <section class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>${editId ? "แก้ไขสินค้า" : "เพิ่มสินค้าใหม่"}</h2>
+                  <p class="hint">
+                    กรอกข้อมูลสินค้า หมวดหมู่ ราคา สต็อก สี ไซส์ และรูปภาพสินค้า
+                  </p>
+                </div>
+              </div>
+
+              <form class="form" id="productForm">
+                <!-- ชื่อสินค้า -->
+                <input id="productNameInput" required placeholder="ชื่อสินค้า" />
+
+                <!-- หมวดหมู่สินค้า -->
+                <select id="productCategoryInput" required>
+                  ${categories
+                    .map(
+                      (cat) =>
+                        `<option value="${escapeHtml(cat.id)}">${escapeHtml(cat.name)}</option>`,
+                    )
+                    .join("")}
+                </select>
+
+                <!-- ราคา -->
+                <input id="productPriceInput" required type="number" min="0" placeholder="ราคา" />
+
+                <!-- จำนวนสต็อก -->
+                <input id="productStockInput" required type="number" min="0" placeholder="จำนวนสต็อก" />
+
+                <!-- Badge เช่น NEW / HOT / BEST -->
+                <input id="productBadgeInput" placeholder="Badge เช่น NEW / HOT / BEST" />
+
+                <!-- สีสินค้า คั่นด้วย comma -->
+                <input id="productColorsInput" placeholder="สี คั่นด้วย , เช่น ขาว,เขียว" />
+
+                <!-- ไซส์หรือตัวเลือก คั่นด้วย comma -->
+                <input id="productSizesInput" placeholder="ไซส์/ตัวเลือก คั่นด้วย , เช่น S,M,L,XL" />
+
+                <!-- รูปภาพสินค้า: ถ้าแก้ไขแล้วไม่เลือกใหม่ จะใช้รูปเดิม -->
+                <input id="productImageInput" type="file" accept="image/*" />
+
+                <!-- คำบรรยายสินค้า -->
+                <textarea id="productDescInput" placeholder="คำบรรยายสินค้า"></textarea>
+
+                <button class="btn full" type="submit">
+                  ${editId ? "บันทึกการแก้ไข" : "เพิ่มสินค้า"}
+                </button>
+
+                ${
+                  editId
+                    ? `<button class="btn light full" type="button" data-action="cancel-edit">ยกเลิกการแก้ไข</button>`
+                    : ""
+                }
+              </form>
+
+              <p class="hint">
+                หมายเหตุ: รูปภาพจะถูกบีบอัดและเก็บเป็น Base64 ใน localStorage เพื่อทดลองใช้งานได้ทันที
+                ${editingProduct ? "หากไม่เลือกรูปใหม่ ระบบจะใช้รูปเดิมของสินค้า" : ""}
+              </p>
+            </section>
+
+            <section class="panel">
+              <h2>รายการสินค้า</h2>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>รูป</th>
+                      <th>สินค้า</th>
+                      <th>หมวดหมู่</th>
+                      <th>ราคา</th>
+                      <th>Stock</th>
+                      <th>ตัวเลือก</th>
+                      <th>จัดการ</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    ${
+                      products.length
+                        ? products
+                            .map(
+                              (product) => `
+                                <tr>
+                                  <td>
+                                    <img src="${adminImageSrc(product.image)}" alt="${escapeHtml(product.name)}">
+                                  </td>
+
+                                  <td>
+                                    <b>${escapeHtml(product.name)}</b><br>
+                                    <span class="hint">${escapeHtml(product.desc || "")}</span>
+                                  </td>
+
+                                  <td>${escapeHtml(product.categoryName || product.category)}</td>
+                                  <td>${baht(product.price)}</td>
+                                  <td>${Number(product.stock || 0)}</td>
+
+                                  <td>
+                                    ${escapeHtml((product.colors || []).join(", "))}<br>
+                                    ${escapeHtml((product.sizes || []).join(", "))}
+                                  </td>
+
+                                  <td>
+                                    <div class="actions">
+                                      <button class="small edit" type="button" data-action="edit" data-id="${escapeHtml(product.id)}">
+                                        แก้ไข
+                                      </button>
+
+                                      <button class="small del" type="button" data-action="delete" data-id="${escapeHtml(product.id)}">
+                                        ลบ
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              `,
+                            )
+                            .join("")
+                        : '<tr><td colspan="7">ยังไม่มีสินค้า</td></tr>'
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          `;
+
+          bindFormSubmit();
+
+          if (editingProduct) {
+            fillProductForm(editingProduct);
+          }
+        }
+
+        // =============================================================
+        // 5) Bind form submit
+        // =============================================================
+        function bindFormSubmit() {
+          const { form } = getFormElements();
+
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            await saveProduct();
+          });
+        }
+
+        // =============================================================
+        // 6) Save product: เพิ่มสินค้าใหม่ / บันทึกแก้ไขสินค้าเดิม
+        // =============================================================
+        async function saveProduct() {
+          const elements = getFormElements();
+          const categories = getStore(CAT_KEY);
+          const products = getStore(PRODUCT_KEY);
+
+          const oldProduct = products.find((product) => product.id === editId);
+          const selectedCategory = categories.find(
+            (cat) => cat.id === elements.categorySelect.value,
+          );
+
+          const productName = elements.nameInput.value.trim();
+
+          if (!productName) {
+            alert("กรุณากรอกชื่อสินค้า");
+            elements.nameInput.focus();
+            return;
+          }
+
+          let imageData = "";
+
+          try {
+            imageData = await readImageFile(elements.imageInput.files[0]);
+          } catch (error) {
+            console.error(error);
+            alert("อ่านไฟล์รูปภาพไม่สำเร็จ กรุณาเลือกรูปภาพใหม่อีกครั้ง");
+            return;
+          }
+
+          const productData = {
+            id: editId || createId("product"),
+            name: productName,
+            category: elements.categorySelect.value,
+            categoryName: selectedCategory?.name || elements.categorySelect.value,
+            price: Number(elements.priceInput.value || 0),
+            stock: Number(elements.stockInput.value || 0),
+            badge: elements.badgeInput.value.trim() || "NEW",
+
+            // สำคัญ: เก็บ path แบบหน้าร้าน ไม่ใส่ ../ เพื่อให้ index.html แสดงได้ถูกต้อง
+            image: imageData || oldProduct?.image || "assets/products/book.jpg",
+
+            colors: commaToArray(elements.colorsInput.value),
+            sizes: commaToArray(elements.sizesInput.value),
+            desc: elements.descInput.value.trim(),
+            createdAt: oldProduct?.createdAt || new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+
+          const nextProducts = editId
+            ? products.map((product) => (product.id === editId ? productData : product))
+            : [productData, ...products];
+
+          const saved = setStore(PRODUCT_KEY, nextProducts);
+          if (!saved) return;
+
+          // ตรวจสอบหลังบันทึกว่า localStorage มีสินค้านี้จริง
+          const checkProduct = getStore(PRODUCT_KEY).find(
+            (product) => product.id === productData.id,
+          );
+
+          if (!checkProduct) {
+            alert("บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+            return;
+          }
+
+          editId = null;
+          renderProductsPage();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          alert("บันทึกข้อมูลสินค้าเรียบร้อยแล้ว");
+        }
+
+        // =============================================================
+        // 7) Fill form when editing
+        // =============================================================
+        function fillProductForm(product) {
+          const elements = getFormElements();
+
+          elements.nameInput.value = product.name || "";
+          elements.categorySelect.value = product.category || "";
+          elements.priceInput.value = product.price || 0;
+          elements.stockInput.value = product.stock || 0;
+          elements.badgeInput.value = product.badge || "";
+          elements.colorsInput.value = (product.colors || []).join(",");
+          elements.sizesInput.value = (product.sizes || []).join(",");
+          elements.descInput.value = product.desc || "";
+        }
+
+        // =============================================================
+        // 8) Start editing
+        // =============================================================
+        function startEditProduct(id) {
+          const products = getStore(PRODUCT_KEY);
+          const exists = products.some((product) => product.id === id);
+
+          if (!exists) {
+            alert("ไม่พบสินค้าที่ต้องการแก้ไข");
+            return;
+          }
+
+          editId = id;
+          renderProductsPage();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // =============================================================
+        // 9) Delete product
+        // =============================================================
+        function deleteProduct(id) {
+          if (!confirm("ลบสินค้านี้?")) return;
+
+          const nextProducts = getStore(PRODUCT_KEY).filter(
+            (product) => product.id !== id,
+          );
+
+          const saved = setStore(PRODUCT_KEY, nextProducts);
+          if (!saved) return;
+
+          if (editId === id) editId = null;
+          renderProductsPage();
+        }
+
+        // =============================================================
+        // 10) Event delegation สำหรับปุ่มในหน้า Products
+        // =============================================================
+        appEl.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-action]");
+          if (!button) return;
+
+          const action = button.dataset.action;
+          const id = button.dataset.id;
+
+          if (action === "edit") {
+            startEditProduct(id);
+          }
+
+          if (action === "delete") {
+            deleteProduct(id);
+          }
+
+          if (action === "cancel-edit") {
+            editId = null;
+            renderProductsPage();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+
+        // =============================================================
+        // 11) First render
+        // =============================================================
+        renderProductsPage();
+      });
+    </script>
+  </body>
+</html>

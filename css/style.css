@@ -1,0 +1,1622 @@
+/* =============================================================
+   Pharmacy Real Shop - Main Stylesheet
+   ไฟล์นี้จัดเรียงใหม่ให้อ่านง่าย โดยไม่เปลี่ยนชื่อ class หรือโครงสร้างหลัก
+   ลำดับโดยรวม: Variables → Reset → Header → Navigation → Hero → Store → Products → Checkout → Footer → Responsive
+   ============================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap");
+/* ---------- 1) Theme Variables / ตัวแปรสีและเงา ---------- */
+:root {
+  --olive: #737700;
+  --olive2: #8b9008;
+  --dark: #101828;
+  --muted: #667085;
+  --line: #e9ead7;
+  --soft: #fafaf4;
+  --bg: #fff;
+  --shadow: 0 18px 45px rgba(17, 24, 39, 0.1);
+  --radius: 22px;
+}
+/* ---------- 2) Reset & Base / รีเซ็ตพื้นฐาน ---------- */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  font-family: "Noto Sans Thai", sans-serif;
+  color: var(--dark);
+  background: #fff;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+button {
+  cursor: pointer;
+}
+/* ---------- 3) Layout Helpers / ตัวช่วยจัดหน้า ---------- */
+.wrap {
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 22px;
+}
+.hidden {
+  display: none !important;
+}
+/* ---------- 4) Header Top Bar / ส่วนหัวบน ---------- */
+.top {
+  height: 78px;
+  background: var(--olive);
+  color: #fff;
+}
+.top-wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 330px;
+  color: #fff;
+  text-decoration: none;
+}
+.brand img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+}
+.brand strong {
+  display: block;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 900;
+}
+.brand small {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.system {
+  font-size: 19px;
+  font-weight: 900;
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+  padding-left: 28px;
+  flex: 1;
+  white-space: nowrap;
+}
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 800;
+}
+.lang {
+  white-space: nowrap;
+}
+.profile-btn {
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 9px 5px 20px;
+  font-weight: 800;
+}
+.profile-btn small {
+  display: block;
+  text-align: right;
+  color: #eee;
+}
+.profile-btn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.logout {
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  padding: 0 20px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+/* ---------- 5) Navigation / เมนูหลัก ---------- */
+.nav {
+  height: 58px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.nav a {
+  text-decoration: none;
+  color: #344054;
+  font-weight: 800;
+  position: relative;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.nav a.active,
+.nav a:hover {
+  color: var(--olive);
+}
+.nav a.active:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -17px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--olive);
+}
+.bo-link {
+  margin-left: auto;
+  color: var(--olive) !important;
+}
+/* ---------- 6) Hero Banner / แบนเนอร์หน้าแรก ---------- */
+.hero {
+  height: 320px;
+  position: relative;
+  background: url("../assets/In Banner 4.jpg") center/cover no-repeat;
+}
+.hero:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.88),
+    rgba(210, 215, 135, 0.5),
+    rgba(0, 0, 0, 0.52)
+  );
+}
+.hero-content {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 48px;
+  font-weight: 900;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.42);
+}
+.hero p {
+  color: #fff;
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 800;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+}
+.main-space {
+  padding-top: 26px;
+}
+/* ---------- 7) Store Tabs / เมนูร้านค้าขนาดเล็ก ---------- */
+.store-tabs {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #edf0f3;
+  border-radius: 18px;
+  box-shadow: 0 12px 34px rgba(17, 24, 39, 0.08);
+  margin-bottom: 18px;
+  padding: 10px 16px;
+}
+.store-tabs .tab {
+  border: 0;
+  background: transparent;
+  color: #344054;
+  font-weight: 900;
+  font-size: 15px;
+}
+.store-tabs .tab.active,
+.store-tabs .tab:hover {
+  color: var(--olive);
+}
+.store-tabs b {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--olive);
+  color: #fff;
+  font-size: 11px;
+  margin-left: 4px;
+}
+.divider {
+  color: #c7ccda;
+}
+/* ---------- 8) Search Card / กล่องค้นหาสินค้า ---------- */
+.search-card {
+  margin: 0 auto 28px;
+  background: #fff;
+  border: 1px solid #eceff3;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+.search-head {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+.search-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.search-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr 116px;
+  gap: 14px;
+}
+.search-input {
+  height: 48px;
+  border: 1px solid #cfd6e4;
+  border-radius: 10px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-input i {
+  color: #98a2b3;
+}
+.search-input input {
+  border: 0;
+  outline: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+}
+.btn {
+  height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--olive2);
+  color: #fff;
+  font-weight: 900;
+}
+/* ---------- 9) Section Header / หัวข้อแต่ละส่วน ---------- */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 0 16px;
+}
+.section-head h2 {
+  margin: 0;
+  font-size: 24px;
+}
+.link {
+  border: 0;
+  background: transparent;
+  color: var(--olive);
+  font-weight: 900;
+}
+/* ---------- 10) Category Cards / หมวดหมู่สินค้า ---------- */
+.cats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.cat {
+  height: 104px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  transition: 0.25s;
+}
+.cat:hover,
+.cat.active {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: #cfd39c;
+}
+.cat i {
+  width: 45px;
+  height: 45px;
+  border-radius: 13px;
+  background: #f1f2df;
+  color: var(--olive);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+.cat strong {
+  display: block;
+  font-size: 14px;
+}
+.cat span {
+  font-size: 12px;
+  color: var(--muted);
+}
+/* ---------- 11) Product Grid & Product Card / รายการสินค้า ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.06);
+  transition: 0.25s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+}
+.pic {
+  height: 190px;
+  margin: 14px 14px 0;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background: #f7f7f0;
+}
+.pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: 0.3s;
+}
+.pic img:hover {
+  transform: scale(1.05);
+}
+.badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: var(--olive2);
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 900;
+}
+.heart {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: #667085;
+  font-size: 22px;
+}
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.content h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  line-height: 1.35;
+  min-height: 48px;
+}
+.desc {
+  margin: 0;
+  color: #606b7d;
+  line-height: 1.7;
+  font-size: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 13px 0;
+}
+.chip {
+  font-size: 11px;
+  background: #f4f5e8;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: #667085;
+}
+.bottom {
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.price {
+  font-size: 24px;
+  font-weight: 900;
+}
+.cart {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--olive2);
+  color: #fff;
+  font-size: 18px;
+  box-shadow: 0 10px 24px rgba(115, 119, 0, 0.25);
+}
+/* ---------- 12) Panels & Orders / Wishlist และออเดอร์ของฉัน ---------- */
+.panel {
+  margin-top: 22px;
+}
+.orders {
+  display: grid;
+  gap: 16px;
+}
+.order {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 26px rgba(17, 24, 39, 0.06);
+}
+.order h3 {
+  margin: 0 0 8px;
+}
+.order-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
+}
+.status {
+  display: inline-block;
+  background: #eff8e8;
+  color: #4d6500;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 900;
+}
+.timeline {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.step {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 800;
+}
+.step.done {
+  background: #eaefc0;
+  color: #5c6100;
+}
+/* ---------- 13) Benefits / จุดเด่นร้านค้า ---------- */
+.benefits {
+  margin: 42px 0 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+}
+.benefit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border-right: 1px solid var(--line);
+}
+.benefit:last-child {
+  border-right: 0;
+}
+.benefit i {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #f1f2df;
+  color: var(--olive);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+.benefit strong {
+  display: block;
+}
+.benefit span {
+  font-size: 12px;
+  color: var(--muted);
+}
+/* ---------- 14) Checkout Base / หน้าชำระเงินเดิม ---------- */
+.checkout {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin: 26px 0;
+}
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.form input,
+.form select,
+.form textarea {
+  height: 48px;
+  border: 1px solid #cfd6e4;
+  border-radius: 10px;
+  padding: 0 14px;
+}
+.form textarea {
+  grid-column: 1/-1;
+  height: 100px;
+  padding-top: 14px;
+}
+.form button {
+  grid-column: 1/-1;
+}
+/* ---------- 15) Floating Cart / ปุ่มตะกร้าลอย ---------- */
+.float-cart {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--olive2);
+  color: #fff;
+  font-size: 24px;
+  box-shadow: var(--shadow);
+  z-index: 70;
+}
+.count {
+  position: absolute;
+  right: -2px;
+  top: -5px;
+  background: #fff;
+  color: var(--olive);
+  border-radius: 999px;
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 900;
+}
+/* ---------- 16) Product Modal / Modal รายละเอียดสินค้า ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+}
+.modal.show {
+  display: block;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+}
+.modal-box {
+  position: relative;
+  background: #fff;
+  width: min(980px, calc(100% - 34px));
+  max-height: 90vh;
+  overflow: auto;
+  margin: 5vh auto;
+  border-radius: 24px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+  padding: 28px;
+}
+.close {
+  border: 0;
+  background: #f3f4f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+}
+.modal-box > .close {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+}
+.detail {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+}
+.detail-img {
+  background: #f8f7ef;
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  place-items: center;
+}
+.detail-img img {
+  width: 100%;
+  height: 430px;
+  object-fit: contain;
+}
+.detail .badge {
+  position: static;
+  display: inline-block;
+}
+.detail-desc {
+  line-height: 1.9;
+  color: #667085;
+}
+.option-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 18px;
+}
+.option {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 800;
+}
+.option.active {
+  background: var(--olive2);
+  border-color: var(--olive2);
+  color: #fff;
+}
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.qty button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: #f6f7ef;
+  font-size: 22px;
+}
+.qty b {
+  min-width: 48px;
+  text-align: center;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+.outline {
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--olive);
+  font-weight: 900;
+  padding: 0 18px;
+}
+/* ---------- 17) Cart Drawer / Drawer ตะกร้า ---------- */
+.drawer {
+  position: fixed;
+  right: -420px;
+  top: 0;
+  width: 400px;
+  max-width: 100%;
+  height: 100vh;
+  background: #fff;
+  z-index: 120;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.16);
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+.drawer.show {
+  right: 0;
+}
+.drawer-head,
+.drawer-foot {
+  padding: 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.drawer-foot {
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+  display: block;
+}
+.drawer-body {
+  padding: 18px;
+  overflow: auto;
+  flex: 1;
+}
+.cart-item {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.cart-item img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.cart-item button {
+  border: 0;
+  background: #fee;
+  color: #b42318;
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+.wide {
+  width: 100%;
+}
+/* ---------- 18) Footer / ส่วนท้ายเว็บไซต์ ---------- */
+.corp-footer {
+  background: #fff;
+  margin-top: 70px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 90px;
+  padding: 60px 22px;
+}
+.footer-grid h2 {
+  font-size: 32px;
+  margin: 0 0 24px;
+}
+.footer-grid p {
+  line-height: 1.9;
+  color: #344054;
+}
+.contact-row {
+  margin-top: 12px;
+}
+.socials {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.socials a {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--olive2);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 900;
+}
+.deps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.footer-bottom {
+  background: var(--olive);
+  color: #fff;
+  text-align: center;
+  padding: 18px;
+}
+.footer-bottom p {
+  margin: 5px;
+}
+.footer-bottom a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 900;
+}
+/* ---------- 19) Responsive: Tablet ---------- */
+@media (max-width: 1050px) {
+  .top {
+    height: auto;
+  }
+  .top-wrap {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .system {
+    order: 3;
+    flex-basis: 100%;
+    border-left: 0;
+    padding-left: 0;
+  }
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .cats,
+  .benefits {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* ---------- 20) Responsive: Mobile ---------- */
+@media (max-width: 760px) {
+  .brand {
+    min-width: 0;
+  }
+  .brand strong {
+    font-size: 20px;
+  }
+  .top-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .logout {
+    display: none;
+  }
+  .nav {
+    overflow-x: auto;
+  }
+  .nav-wrap {
+    gap: 22px;
+  }
+  .hero {
+    height: 260px;
+  }
+  .hero h1 {
+    font-size: 34px;
+  }
+  .hero p {
+    font-size: 16px;
+  }
+  .store-tabs {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+  .search-head {
+    display: block;
+  }
+  .search-row,
+  .form,
+  .footer-grid,
+  .order-grid,
+  .detail {
+    grid-template-columns: 1fr;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .cats,
+  .benefits,
+  .deps {
+    grid-template-columns: 1fr;
+  }
+  .benefit {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .detail-img img {
+    height: 280px;
+  }
+}
+
+/* =============================
+   Header ปรับใหม่ให้เหมือนเว็บจริง
+   ============================= */
+.top {
+  height: 78px;
+  background: #737700;
+  color: #fff;
+}
+.top-wrap {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 360px 1fr auto auto auto;
+  align-items: center;
+  gap: 22px;
+}
+.brand {
+  min-width: 0;
+  width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+  text-decoration: none;
+}
+.brand img {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+  padding: 4px;
+}
+.brand strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.brand small {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0.95;
+}
+.system {
+  min-width: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.48);
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.top-actions {
+  display: contents;
+}
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 16px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.profile-btn {
+  width: 250px;
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 8px 5px 18px;
+  font-weight: 900;
+}
+.profile-btn span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: normal;
+}
+.profile-btn small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  text-align: right;
+  opacity: 0.95;
+}
+.profile-btn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex: 0 0 40px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+.logout {
+  width: 154px;
+  height: 44px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.nav {
+  height: 58px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08);
+}
+.nav-wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.nav a {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #344054;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
+  position: relative;
+}
+.nav a.active,
+.nav a:hover {
+  color: #737700;
+}
+.nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  border-radius: 999px 999px 0 0;
+  background: #737700;
+}
+.bo-link {
+  margin-left: auto;
+}
+.store-tabs .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.modal-actions .btn,
+.cart,
+.float-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+@media (max-width: 1180px) {
+  .top {
+    height: auto;
+    min-height: 78px;
+  }
+  .top-wrap {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    grid-template-columns: 1fr auto;
+    gap: 12px 18px;
+  }
+  .brand {
+    width: auto;
+  }
+  .system {
+    grid-column: 1/-1;
+    order: 3;
+    border-left: 0;
+    padding-left: 0;
+    height: auto;
+    font-size: 16px;
+  }
+  .top-actions {
+    display: flex;
+    grid-column: 1/-1;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 760px) {
+  .brand strong {
+    font-size: 20px;
+  }
+  .brand small {
+    font-size: 11px;
+  }
+  .profile-btn {
+    width: 220px;
+  }
+  .logout span {
+    display: none;
+  }
+  .logout {
+    width: 48px;
+  }
+  .nav-wrap {
+    gap: 24px;
+    overflow-x: auto;
+  }
+}
+
+/* =============================================================
+   Order status badges on storefront
+   ใช้สีช่วยให้ลูกค้าอ่านสถานะคำสั่งซื้อได้ง่าย
+   ============================================================= */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 118px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.status-pending {
+  background: #fff4d6;
+  color: #9a5b00;
+}
+.status-preparing {
+  background: #e8f1ff;
+  color: #175cd3;
+}
+.status-shipping {
+  background: #fff1e6;
+  color: #c04f00;
+}
+.status-completed {
+  background: #e8f8ee;
+  color: #147a3d;
+}
+.status-cancelled {
+  background: #ffe8e8;
+  color: #b42318;
+}
+.tracking-no {
+  margin-top: 12px;
+  color: #344054;
+}
+
+/* =============================================================
+   Checkout delivery section - เพิ่มในดีไซน์เดิม ไม่เปลี่ยนโครงหน้าเว็บ
+   ============================================================= */
+.checkout-head {
+  margin-bottom: 18px;
+}
+.checkout-head .eyebrow {
+  display: inline-block;
+  color: var(--olive);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.checkout-head h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 900;
+}
+.checkout-head p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.checkout-form {
+  display: block;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 22px;
+  align-items: start;
+}
+.checkout-main {
+  display: grid;
+  gap: 18px;
+}
+.checkout-card,
+.checkout-summary {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 34px rgba(17, 24, 39, 0.06);
+}
+.checkout-card h3,
+.checkout-summary h3 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  font-weight: 900;
+}
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.form-grid,
+.address-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.form-grid label,
+.address-form label {
+  display: grid;
+  gap: 7px;
+  font-weight: 800;
+  color: #344054;
+}
+.form-grid label.full {
+  grid-column: 1/-1;
+}
+.form-grid input,
+.address-form input,
+.address-form select,
+.checkout-card select {
+  height: 48px;
+  border: 1px solid #cfd6e4;
+  border-radius: 12px;
+  padding: 0 14px;
+  outline: none;
+  background: #fff;
+  color: var(--dark);
+}
+.form-grid input:focus,
+.address-form input:focus,
+.address-form select:focus,
+.checkout-card select:focus {
+  border-color: var(--olive);
+  box-shadow: 0 0 0 4px rgba(115, 119, 0, 0.1);
+}
+.delivery-options {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+.delivery-option {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid #dfe3cf;
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: 0.22s;
+  background: #fff;
+}
+.delivery-option:hover,
+.delivery-option.active {
+  border-color: var(--olive);
+  box-shadow: 0 12px 28px rgba(115, 119, 0, 0.1);
+  background: #fffdf2;
+}
+.delivery-option input {
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  accent-color: var(--olive);
+}
+.delivery-option strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+.delivery-option span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.delivery-option b {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--olive);
+  font-weight: 900;
+}
+.delivery-detail {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  background: #fafaf4;
+  border-radius: 16px;
+  padding: 18px;
+}
+.delivery-detail h4 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 900;
+}
+.delivery-detail p {
+  margin: 0 0 8px;
+  line-height: 1.85;
+  color: #344054;
+}
+.checkout-summary {
+  position: sticky;
+  top: 78px;
+}
+.summary-items {
+  display: grid;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.summary-product,
+.summary-line,
+.summary-total {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.summary-product span {
+  font-weight: 800;
+}
+.summary-product small {
+  display: block;
+  color: var(--muted);
+  font-weight: 700;
+  margin-top: 3px;
+}
+.summary-line {
+  padding: 9px 0;
+  color: #344054;
+}
+.summary-total {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 900;
+}
+.summary-total b {
+  color: var(--olive);
+}
+.order-note {
+  margin-top: 10px;
+  border-left: 4px solid var(--olive);
+  background: #fafaf4;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #344054;
+}
+@media (max-width: 900px) {
+  .checkout-grid,
+  .form-grid,
+  .address-form {
+    grid-template-columns: 1fr;
+  }
+  .checkout-summary {
+    position: static;
+  }
+}
+
+
+/* =============================================================
+   QR Payment Mockup Modal
+   หน้าต่างชำระเงินผ่าน QR แบบจำลอง ใช้ใน Checkout
+   ============================================================= */
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  display: none;
+}
+
+.qr-modal.show {
+  display: block;
+}
+
+.qr-shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.qr-box {
+  position: relative;
+  width: min(760px, calc(100% - 32px));
+  margin: 6vh auto;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+  padding: 28px;
+}
+
+.qr-close {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #101828;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.qr-head {
+  padding-right: 42px;
+  margin-bottom: 20px;
+}
+
+.qr-kicker {
+  display: inline-block;
+  color: var(--olive);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.qr-head h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.qr-head p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.qr-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.qr-preview {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fafaf4;
+  padding: 22px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.qr-preview small {
+  color: var(--muted);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.qr-code {
+  width: 220px;
+  height: 220px;
+  background: #fff;
+  border: 10px solid #fff;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px #e4e7ec;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 8px;
+  padding: 12px;
+}
+
+.qr-code span {
+  border-radius: 6px;
+  background: #111827;
+}
+
+.qr-code span:nth-child(2),
+.qr-code span:nth-child(4),
+.qr-code span:nth-child(6),
+.qr-code span:nth-child(10),
+.qr-code span:nth-child(12),
+.qr-code span:nth-child(14),
+.qr-code span:nth-child(18),
+.qr-code span:nth-child(20),
+.qr-code span:nth-child(22),
+.qr-code span:nth-child(24) {
+  background: #fff;
+}
+
+.qr-detail {
+  display: grid;
+  gap: 12px;
+}
+
+.qr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 12px;
+}
+
+.qr-row span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.qr-row b {
+  color: var(--dark);
+  font-weight: 900;
+  text-align: right;
+}
+
+.qr-note {
+  border-left: 4px solid var(--olive);
+  background: #fafaf4;
+  border-radius: 12px;
+  color: #344054;
+  line-height: 1.7;
+  padding: 12px 14px;
+  margin: 4px 0;
+}
+
+.payment-line {
+  margin-top: 10px;
+  color: #344054;
+}
+
+@media (max-width: 760px) {
+  .qr-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-code {
+    width: 190px;
+    height: 190px;
+  }
+}

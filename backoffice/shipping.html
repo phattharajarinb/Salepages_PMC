@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>สถานะจัดส่ง</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Backoffice: หน้าสถานะจัดส่งและเลขพัสดุ -->
+    <div class="admin-shell" id="root"></div>
+
+    <script src="admin.js"></script>
+    <script>
+      // =============================================================
+      // หน้า Backoffice: สถานะจัดส่ง
+      // ใช้สำหรับใส่เลขพัสดุและติดตามออเดอร์ที่ยังไม่สำเร็จ
+      // =============================================================
+
+      const appEl = initAdminPage("สถานะจัดส่ง");
+
+      const statusClass = {
+        รอชำระเงิน: "status-pending",
+        กำลังเตรียมสินค้า: "status-preparing",
+        กำลังจัดส่ง: "status-shipping",
+        จัดส่งสำเร็จ: "status-completed",
+        ยกเลิก: "status-cancelled",
+      };
+
+      function badge(status) {
+        return `<span class="status-badge ${statusClass[status] || "status-preparing"}">${status}</span>`;
+      }
+
+      function deliveryLabel(type) {
+        if (type === "pickup") return "รับด้วยตนเอง";
+        if (type === "registered") return "จัดส่งที่อยู่ที่ลงทะเบียนไว้";
+        if (type === "custom") return "เลือกที่อยู่เอง";
+        return "-";
+      }
+
+      function render() {
+        const orders = getStore(ORDER_KEY).filter(
+          (o) => !["จัดส่งสำเร็จ", "ยกเลิก"].includes(o.status),
+        );
+
+        appEl.innerHTML = `
+        <section class="panel">
+          <h2>ออเดอร์ที่กำลังดำเนินการ</h2>
+          <p class="hint">ใส่เลขพัสดุแล้วระบบจะเปลี่ยนสถานะเป็น กำลังจัดส่ง โดยอัตโนมัติ</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>เลขออเดอร์</th>
+                  <th>ลูกค้า</th>
+                  <th>วิธีรับสินค้า / ที่อยู่</th>
+                  <th>สถานะ</th>
+                  <th>Tracking</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${
+                  orders
+                    .map(
+                      (o) => `
+                  <tr>
+                    <td><b>${o.id}</b><br><span class="hint">${fmtDate(o.createdAt)}</span></td>
+                    <td>${o.customer.name}<br><span class="hint">${o.customer.phone}</span></td>
+                    <td><b>${deliveryLabel(o.delivery?.type)}</b><br><span class="hint">${o.delivery?.address || "-"}</span></td>
+                    <td>${badge(o.status)}</td>
+                    <td><input value="${o.tracking || ""}" onchange="saveTrack('${o.id}', this.value)" placeholder="ใส่เลขพัสดุ"></td>
+                  </tr>`,
+                    )
+                    .join("") || '<tr><td colspan="5">ไม่มีออเดอร์รอจัดส่ง</td></tr>'
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>`;
+      }
+
+      window.saveTrack = (id, tracking) => {
+        setStore(
+          ORDER_KEY,
+          getStore(ORDER_KEY).map((o) => {
+            if (o.id !== id) return o;
+            return { ...o, tracking, status: tracking ? "กำลังจัดส่ง" : o.status };
+          }),
+        );
+        render();
+      };
+
+      render();
+    </script>
+  </body>
+</html>
